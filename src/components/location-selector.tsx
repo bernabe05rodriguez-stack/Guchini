@@ -4,8 +4,8 @@ import { useState, useEffect } from "react"
 import { MapPin } from "lucide-react"
 
 const LOCATIONS = [
-  { id: "chacras", name: "Chacras", description: "Chacras de Coria" },
-  { id: "lacasa", name: "La Casa", description: "La Casa" },
+  { id: "chacras", name: "Chacras", description: "Itala 3475, Chacras de Coria" },
+  { id: "lacasa", name: "La Casa", description: "San Lorenzo 577, Ciudad" },
 ] as const
 
 const LOCATION_KEY = "guchini-location"
