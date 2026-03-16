@@ -31,28 +31,3 @@ export async function getAdminFromCookie() {
   if (!token) return null
   return verifyAdminToken(token)
 }
-
-// ---- Customer Auth ----
-export async function signUserToken(payload: { sub: string; email: string; name: string | null }) {
-  return new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("7d")
-    .sign(secret)
-}
-
-export async function verifyUserToken(token: string) {
-  try {
-    const { payload } = await jwtVerify(token, secret)
-    return payload as { sub: string; email: string; name: string | null }
-  } catch {
-    return null
-  }
-}
-
-export async function getUserFromCookie() {
-  const cookieStore = cookies()
-  const token = cookieStore.get("user_token")?.value
-  if (!token) return null
-  return verifyUserToken(token)
-}

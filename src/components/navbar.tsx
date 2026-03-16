@@ -2,35 +2,22 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { ShoppingCart, User, LogOut, Menu, X } from "lucide-react"
+import { ShoppingCart, MapPin, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useCart } from "@/contexts/cart-context"
 import { useEffect, useState } from "react"
 
-interface UserData {
-  sub: string
-  email: string
-  name: string | null
-}
-
 export function Navbar() {
   const { itemCount, setIsOpen } = useCart()
-  const [user, setUser] = useState<UserData | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [location, setLocation] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch("/api/auth/me")
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data?.user) {
-          setUser({ sub: data.user.id, email: data.user.email, name: data.user.fullName })
-        } else {
-          setUser(null)
-        }
-      })
-      .catch(() => setUser(null))
+    setLocation(localStorage.getItem("guchini-location"))
+    const handler = () => setLocation(localStorage.getItem("guchini-location"))
+    window.addEventListener("location-changed", handler)
+    return () => window.removeEventListener("location-changed", handler)
   }, [])
 
   useEffect(() => {
@@ -39,11 +26,13 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const handleSignOut = async () => {
-    await fetch("/api/auth/logout", { method: "POST" })
-    setUser(null)
-    window.location.href = "/"
+  const changeLocation = () => {
+    localStorage.removeItem("guchini-location")
+    window.dispatchEvent(new Event("location-changed"))
+    window.location.reload()
   }
+
+  const locationLabel = location === "chacras" ? "Chacras" : location === "lacasa" ? "La Casa" : null
 
   return (
     <nav className={`fixed top-0 z-50 w-full transition-all duration-500 bg-white/95 backdrop-blur-md ${
@@ -57,6 +46,17 @@ export function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-1 sm:gap-2">
+          {/* Location badge */}
+          {locationLabel && (
+            <button
+              onClick={changeLocation}
+              className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-olive hover:text-olive-light transition-colors px-3 py-1.5 rounded-full bg-olive/5 hover:bg-olive/10"
+            >
+              <MapPin className="h-3.5 w-3.5" />
+              {locationLabel}
+            </button>
+          )}
+
           {/* Cart */}
           <Button
             variant="ghost"
@@ -71,31 +71,6 @@ export function Navbar() {
               </span>
             )}
           </Button>
-
-          {/* User */}
-          {user ? (
-            <div className="hidden sm:flex items-center gap-2">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-olive text-white text-xs">
-                  {user.name?.[0] || user.email[0]?.toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-              <Button variant="ghost" size="icon" onClick={handleSignOut} className="hover:bg-olive/5">
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </div>
-          ) : (
-            <Link href="/auth/login" className="hidden sm:block">
-              <Button
-                size="sm"
-                className="gap-2 rounded-full font-semibold"
-                style={{ backgroundColor: "#2D5016", color: "#FFFFFF" }}
-              >
-                <User className="h-4 w-4" />
-                Ingresar
-              </Button>
-            </Link>
-          )}
 
           {/* Mobile menu button */}
           <Button
@@ -113,22 +88,15 @@ export function Navbar() {
       {mobileOpen && (
         <div className="md:hidden bg-white border-t border-border/50 shadow-lg">
           <div className="container py-3 space-y-1">
-            <div className="pt-2">
-              {!user && (
-                <Link href="/auth/login" className="block">
-                  <Button variant="outline" size="sm" className="w-full gap-2 rounded-full">
-                    <User className="h-4 w-4" />
-                    Ingresar
-                  </Button>
-                </Link>
-              )}
-              {user && (
-                <Button variant="ghost" size="sm" className="w-full gap-2" onClick={handleSignOut}>
-                  <LogOut className="h-4 w-4" />
-                  Cerrar sesión
-                </Button>
-              )}
-            </div>
+            {locationLabel && (
+              <button
+                onClick={changeLocation}
+                className="flex items-center gap-2 text-sm font-medium text-olive w-full py-2"
+              >
+                <MapPin className="h-4 w-4" />
+                {locationLabel} — Cambiar local
+              </button>
+            )}
           </div>
         </div>
       )}

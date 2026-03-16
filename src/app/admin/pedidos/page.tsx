@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { formatPrice } from "@/lib/utils"
 import { toast } from "sonner"
-import { ChefHat, Check, PackageCheck, AlertTriangle, Clock } from "lucide-react"
+import { ChefHat, Check, PackageCheck, AlertTriangle, Clock, MapPin, Phone } from "lucide-react"
 import type { OrderWithItems } from "@/types/database"
 
 const STATUS_FLOW = {
@@ -24,9 +24,15 @@ const ACTION_BUTTONS = {
   ready: { label: "Entregado", icon: PackageCheck, className: "bg-green-600 hover:bg-green-700 text-white" },
 } as const
 
+const LOCATION_LABELS: Record<string, string> = {
+  chacras: "Chacras",
+  lacasa: "La Casa",
+}
+
 export default function AdminPedidosPage() {
   const [orders, setOrders] = useState<OrderWithItems[]>([])
   const [loading, setLoading] = useState(true)
+  const [locationFilter, setLocationFilter] = useState<string>("all")
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const prevCountRef = useRef<number>(0)
 
@@ -70,16 +76,22 @@ export default function AdminPedidosPage() {
     }
   }
 
-  // Sort: paid first (most urgent), then preparing, then ready. Within each group, oldest first
+  const filterByLocation = (list: OrderWithItems[]) => {
+    if (locationFilter === "all") return list
+    return list.filter(o => (o as OrderWithItems & { location?: string }).location === locationFilter)
+  }
+
   const statusPriority: Record<string, number> = { paid: 0, preparing: 1, ready: 2 }
-  const activeOrders = orders
-    .filter(o => ["paid", "preparing", "ready"].includes(o.status))
-    .sort((a, b) => {
-      const pDiff = (statusPriority[a.status] ?? 9) - (statusPriority[b.status] ?? 9)
-      if (pDiff !== 0) return pDiff
-      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-    })
-  const otherOrders = orders.filter(o => !["paid", "preparing", "ready"].includes(o.status))
+  const activeOrders = filterByLocation(
+    orders
+      .filter(o => ["paid", "preparing", "ready"].includes(o.status))
+      .sort((a, b) => {
+        const pDiff = (statusPriority[a.status] ?? 9) - (statusPriority[b.status] ?? 9)
+        if (pDiff !== 0) return pDiff
+        return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      })
+  )
+  const otherOrders = filterByLocation(orders.filter(o => !["paid", "preparing", "ready"].includes(o.status)))
 
   const isNewOrder = (order: OrderWithItems) =>
     order.status === "paid" && (Date.now() - new Date(order.created_at).getTime()) < 60000
@@ -88,11 +100,40 @@ export default function AdminPedidosPage() {
     <div className="space-y-6">
       <audio ref={audioRef} src="/sounds/new-order.mp3" preload="auto" />
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <h1 className="text-3xl font-display font-bold">Cocina - Pedidos</h1>
-        <Badge className="bg-olive text-white text-base px-3 py-1">
-          {activeOrders.length} activos
-        </Badge>
+        <div className="flex items-center gap-3">
+          {/* Location filter */}
+          <div className="flex items-center gap-1 bg-white rounded-full border px-1 py-1">
+            <button
+              onClick={() => setLocationFilter("all")}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                locationFilter === "all" ? "bg-olive text-white" : "text-muted-foreground hover:bg-gray-100"
+              }`}
+            >
+              Todos
+            </button>
+            <button
+              onClick={() => setLocationFilter("chacras")}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                locationFilter === "chacras" ? "bg-olive text-white" : "text-muted-foreground hover:bg-gray-100"
+              }`}
+            >
+              Chacras
+            </button>
+            <button
+              onClick={() => setLocationFilter("lacasa")}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                locationFilter === "lacasa" ? "bg-olive text-white" : "text-muted-foreground hover:bg-gray-100"
+              }`}
+            >
+              La Casa
+            </button>
+          </div>
+          <Badge className="bg-olive text-white text-base px-3 py-1">
+            {activeOrders.length} activos
+          </Badge>
+        </div>
       </div>
 
       {loading ? (
@@ -111,6 +152,8 @@ export default function AdminPedidosPage() {
                   const actionBtn = ACTION_BUTTONS[order.status as keyof typeof ACTION_BUTTONS]
                   const sandwiches = order.order_items?.filter(i => i.item_type === "sandwich") || []
                   const drinks = order.order_items?.filter(i => i.item_type === "drink") || []
+                  const loc = (order as OrderWithItems & { location?: string; customer_phone?: string }).location
+                  const customerPhone = (order as OrderWithItems & { customer_phone?: string }).customer_phone
 
                   return (
                     <Card
@@ -119,18 +162,34 @@ export default function AdminPedidosPage() {
                     >
                       <div className={`h-2 ${statusInfo?.stripColor}`} />
                       <CardContent className="p-4 space-y-3">
-                        {/* Header: order number + status */}
+                        {/* Header: order number + status + location */}
                         <div className="flex items-center justify-between">
                           <span className="font-mono font-bold text-2xl">{order.order_number}</span>
-                          <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusInfo?.color}`}>
-                            {statusInfo?.label}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            {loc && (
+                              <span className="text-xs px-2 py-1 rounded-full font-medium bg-olive/10 text-olive flex items-center gap-1">
+                                <MapPin className="h-3 w-3" />
+                                {LOCATION_LABELS[loc] || loc}
+                              </span>
+                            )}
+                            <span className={`text-xs px-2 py-1 rounded-full font-medium ${statusInfo?.color}`}>
+                              {statusInfo?.label}
+                            </span>
+                          </div>
                         </div>
 
-                        {/* Customer name */}
-                        <p className="text-sm font-medium text-muted-foreground">
-                          {order.customer_name || "Cliente"}
-                        </p>
+                        {/* Customer info */}
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {order.customer_name || "Cliente"}
+                          </p>
+                          {customerPhone && (
+                            <p className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Phone className="h-3 w-3" />
+                              {customerPhone}
+                            </p>
+                          )}
+                        </div>
 
                         {/* Time since order */}
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -212,6 +271,7 @@ export default function AdminPedidosPage() {
               <div className="space-y-2">
                 {otherOrders.slice(0, 20).map((order) => {
                   const statusInfo = STATUS_FLOW[order.status as keyof typeof STATUS_FLOW]
+                  const loc = (order as OrderWithItems & { location?: string }).location
                   return (
                     <div
                       key={order.id}
@@ -222,6 +282,12 @@ export default function AdminPedidosPage() {
                         <span className={`text-xs px-2 py-0.5 rounded-full ${statusInfo?.color}`}>
                           {statusInfo?.label}
                         </span>
+                        {loc && (
+                          <span className="text-xs text-olive flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {LOCATION_LABELS[loc] || loc}
+                          </span>
+                        )}
                         <span className="text-xs text-muted-foreground">{order.customer_name}</span>
                       </div>
                       <div className="text-right">
@@ -237,7 +303,7 @@ export default function AdminPedidosPage() {
             </div>
           )}
 
-          {orders.length === 0 && (
+          {activeOrders.length === 0 && otherOrders.length === 0 && (
             <Card>
               <CardContent className="py-12 text-center text-muted-foreground">
                 No hay pedidos todavia

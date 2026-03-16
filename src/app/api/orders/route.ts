@@ -1,25 +1,26 @@
 export const dynamic = "force-dynamic"
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
-import { verifyUserToken } from "@/lib/auth"
 import { generateOrderNumber } from "@/lib/utils"
 import { rateLimit } from "@/lib/rate-limit"
 
 export async function POST(request: NextRequest) {
   try {
-    const token = request.cookies.get("user_token")?.value
-    if (!token) return NextResponse.json({ error: "No autenticado" }, { status: 401 })
-    const userData = await verifyUserToken(token)
-    if (!userData) return NextResponse.json({ error: "No autenticado" }, { status: 401 })
-
-    const { ok } = rateLimit(`orders:${userData.sub}`, 10, 60_000)
+    const ip = request.headers.get("x-forwarded-for") || "unknown"
+    const { ok } = rateLimit(`orders:${ip}`, 10, 60_000)
     if (!ok) return NextResponse.json({ error: "Demasiados pedidos. Esperá un minuto." }, { status: 429 })
 
     const body = await request.json()
-    const { items, notes, estimated_wait_minutes } = body
+    const { items, notes, estimated_wait_minutes, location, customer_name, customer_email, customer_phone } = body
     if (!items || items.length === 0) return NextResponse.json({ error: "Carrito vacío" }, { status: 400 })
 
-    // Server-side price validation
+    if (!customer_name || !customer_email || !customer_phone) {
+      return NextResponse.json({ error: "Completá nombre, email y teléfono" }, { status: 400 })
+    }
+    if (!location || !["chacras", "lacasa"].includes(location)) {
+      return NextResponse.json({ error: "Seleccioná un local válido" }, { status: 400 })
+    }
+
     const HALF_SANDWICH_PRICE = 7000
     const enrichedItems = []
     for (const item of items) {
@@ -67,12 +68,15 @@ export async function POST(request: NextRequest) {
     const order = await prisma.order.create({
       data: {
         orderNumber,
-        userId: userData.sub,
         status: "pending",
         subtotal,
         total: subtotal,
         estimatedWaitMinutes: estimated_wait_minutes || null,
         notes: notes || null,
+        location,
+        customerName: customer_name,
+        customerEmail: customer_email,
+        customerPhone: customer_phone,
         items: { create: enrichedItems },
       },
       include: { items: true },

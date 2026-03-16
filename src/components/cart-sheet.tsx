@@ -13,22 +13,12 @@ import {
 } from "@/components/ui/sheet"
 import { useCart } from "@/contexts/cart-context"
 import { formatPrice } from "@/lib/utils"
-import { toast } from "sonner"
 
 export function CartSheet() {
   const { items, removeItem, updateQuantity, total, isOpen, setIsOpen, itemCount } = useCart()
   const router = useRouter()
 
-  const handleCheckout = async () => {
-    const res = await fetch("/api/auth/me")
-    const data = await res.json()
-    if (!data?.user) {
-      toast.info("Iniciá sesión para continuar con tu pedido")
-      router.push("/auth/login?redirect=/checkout")
-      setIsOpen(false)
-      return
-    }
-
+  const handleCheckout = () => {
     setIsOpen(false)
     router.push("/checkout")
   }

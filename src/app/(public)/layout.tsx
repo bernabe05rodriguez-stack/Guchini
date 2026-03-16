@@ -2,6 +2,7 @@ import { CartProvider } from "@/contexts/cart-context"
 import { Navbar } from "@/components/navbar"
 import { CartSheet } from "@/components/cart-sheet"
 import { Footer } from "@/components/footer"
+import { LocationSelector } from "@/components/location-selector"
 
 export default function PublicLayout({
   children,
@@ -15,6 +16,7 @@ export default function PublicLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <CartSheet />
+        <LocationSelector />
       </div>
     </CartProvider>
   )

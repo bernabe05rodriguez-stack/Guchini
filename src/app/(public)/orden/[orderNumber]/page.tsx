@@ -9,7 +9,10 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { ConfettiTrigger } from "@/components/confetti-trigger"
 import { formatPrice } from "@/lib/utils"
-import { STORE_ADDRESS } from "@/lib/constants"
+const LOCATION_LABELS: Record<string, string> = {
+  chacras: "Chacras",
+  lacasa: "La Casa",
+}
 import { useCart } from "@/contexts/cart-context"
 import { toast } from "sonner"
 import type { OrderWithItems } from "@/types/database"
@@ -204,7 +207,9 @@ export default function OrderConfirmationPage() {
             <MapPin className="h-5 w-5 text-brown" />
             <div>
               <p className="font-medium">Retirá en el local</p>
-              <p className="text-sm text-muted-foreground">{STORE_ADDRESS}</p>
+              <p className="text-sm text-muted-foreground">
+                {order.location ? LOCATION_LABELS[order.location] || order.location : ""}
+              </p>
             </div>
           </CardContent>
         </Card>

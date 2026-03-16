@@ -48,6 +48,10 @@ export interface Order {
   mp_payment_id: string | null
   mp_status: string | null
   notes: string | null
+  location: string | null
+  customer_name: string | null
+  customer_email: string | null
+  customer_phone: string | null
   created_at: string
   updated_at: string
 }

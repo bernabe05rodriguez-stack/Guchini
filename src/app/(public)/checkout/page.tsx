@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Clock, ShoppingBag, CreditCard } from "lucide-react"
+import { Clock, ShoppingBag, CreditCard, User, Mail, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { useCart } from "@/contexts/cart-context"
@@ -18,6 +19,10 @@ export default function CheckoutPage() {
   const [notes, setNotes] = useState("")
   const [loading, setLoading] = useState(false)
   const [estimatedWait, setEstimatedWait] = useState<number | null>(null)
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [location, setLocation] = useState<string | null>(null)
 
   useEffect(() => {
     if (items.length === 0) {
@@ -25,7 +30,8 @@ export default function CheckoutPage() {
       return
     }
 
-    // Fetch estimated wait time
+    setLocation(localStorage.getItem("guchini-location"))
+
     fetch("/api/orders/wait-time")
       .then(res => res.json())
       .then(data => setEstimatedWait(data.minutes))
@@ -33,9 +39,26 @@ export default function CheckoutPage() {
   }, [items.length, router])
 
   const handlePay = async () => {
+    if (!name.trim()) {
+      toast.error("Ingresá tu nombre")
+      return
+    }
+    if (!email.trim() || !email.includes("@")) {
+      toast.error("Ingresá un email válido")
+      return
+    }
+    if (!phone.trim() || phone.trim().length < 8) {
+      toast.error("Ingresá un número de teléfono válido")
+      return
+    }
+    if (!location) {
+      toast.error("Seleccioná un local primero")
+      router.push("/")
+      return
+    }
+
     setLoading(true)
     try {
-      // 1. Create order
       const orderRes = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,22 +73,28 @@ export default function CheckoutPage() {
           })),
           notes,
           estimated_wait_minutes: estimatedWait,
+          location,
+          customer_name: name.trim(),
+          customer_email: email.trim(),
+          customer_phone: phone.trim(),
         }),
       })
 
       if (!orderRes.ok) {
-        throw new Error("Error al crear el pedido")
+        const err = await orderRes.json()
+        throw new Error(err.error || "Error al crear el pedido")
       }
 
       const order = await orderRes.json()
 
-      // 2. Create MercadoPago preference
       const mpRes = await fetch("/api/mercadopago/create-preference", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           orderId: order.id,
           orderNumber: order.order_number,
+          customerName: name.trim(),
+          customerEmail: email.trim(),
         }),
       })
 
@@ -74,8 +103,6 @@ export default function CheckoutPage() {
       }
 
       const { init_point } = await mpRes.json()
-
-      // 3. Redirect to MercadoPago
       window.location.href = init_point
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Error inesperado")
@@ -85,9 +112,74 @@ export default function CheckoutPage() {
 
   if (items.length === 0) return null
 
+  const locationLabel = location === "chacras" ? "Chacras" : location === "lacasa" ? "La Casa" : "No seleccionado"
+
   return (
     <div className="container max-w-2xl py-8 space-y-6">
       <h1 className="text-3xl font-display font-bold">Confirmar pedido</h1>
+
+      {/* Location */}
+      <Card>
+        <CardContent className="flex items-center justify-between py-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Retiro en:</span>
+            <span className="font-bold text-olive">{locationLabel}</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Customer data form */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <User className="h-5 w-5" />
+            Tus datos
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Nombre</Label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="name"
+                placeholder="Tu nombre completo"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="tu@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="phone">Teléfono</Label>
+            <div className="relative">
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="261 123 4567"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Order summary */}
       <Card>

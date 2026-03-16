@@ -50,17 +50,10 @@ export async function POST(request: NextRequest) {
       default: orderStatus = "pending"
     }
 
-    const order = await prisma.order.update({
+    await prisma.order.update({
       where: { orderNumber: payment.external_reference },
       data: { status: orderStatus, mpPaymentId: String(paymentId), mpStatus: payment.status },
     })
-
-    if (orderStatus === "paid" && order.userId) {
-      await prisma.user.update({
-        where: { id: order.userId },
-        data: { totalOrders: { increment: 1 }, totalSpent: { increment: Number(order.total) } },
-      })
-    }
 
     return NextResponse.json({ received: true })
   } catch (error) {
