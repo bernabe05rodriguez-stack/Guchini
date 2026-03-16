@@ -42,7 +42,7 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
   }
 
   return (
-    <section id="productos" className="py-14 md:py-24 bg-cream">
+    <section id="productos" className="pt-28 md:pt-36 pb-14 md:pb-24 bg-cream">
       <div className="container">
         <div className="text-center mb-10 md:mb-16">
           <span className="text-mustard font-medium text-sm uppercase tracking-widest">Nuestra carta</span>

@@ -1,7 +1,6 @@
 export const dynamic = "force-dynamic"
 
 import { prisma } from "@/lib/db"
-import { HeroSection } from "@/components/hero-section"
 import { CatalogoSection } from "@/components/catalogo-section"
 import { ProductGrid } from "@/components/product-grid"
 import { getStoreStatus } from "@/lib/constants"
@@ -34,9 +33,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroSection storeOpen={storeOpen} storeMessage={storeMessage} />
-
-      {/* Nuestros Sanguchinis */}
       <CatalogoSection dbProducts={sandwichData} storeOpen={storeOpen} storeMessage={storeMessage} />
 
       {/* Bebidas */}
