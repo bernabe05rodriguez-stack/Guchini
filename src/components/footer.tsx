@@ -1,5 +1,5 @@
 import { MapPin, Mail } from "lucide-react"
-import { STORE_NAME, STORE_ADDRESS, STORE_EMAIL, PLATFORM_NAME } from "@/lib/constants"
+import { STORE_ADDRESS, STORE_EMAIL, PLATFORM_NAME } from "@/lib/constants"
 
 export function Footer() {
   return (
