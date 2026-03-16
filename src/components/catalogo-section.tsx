@@ -134,34 +134,29 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
 
                   {/* Precio y botones */}
                   {db && (
-                    <div className="flex flex-col gap-2 pt-3 md:pt-4 border-t border-border">
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg md:text-2xl font-bold text-olive">
-                          {formatPrice(db.price)}
-                        </span>
-                        <Button
-                          onClick={() => handleAdd(product, db)}
-                          disabled={!db.available}
-                          size="sm"
-                          className={`gap-1 md:gap-1.5 rounded-full px-3 md:px-5 text-xs md:text-sm ${!storeOpen ? "bg-gray-400 hover:bg-gray-500" : "bg-olive hover:bg-olive-light"} text-white`}
-                        >
-                          <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                          {storeOpen ? "Agregar" : "Cerrado"}
-                        </Button>
+                    <div className="flex items-center justify-between pt-3 md:pt-4 border-t border-border">
+                      <div>
+                        <span className="text-lg md:text-2xl font-bold text-olive">{formatPrice(db.price)}</span>
+                        <span className="text-xs text-muted-foreground ml-1.5">/ ½ {formatPrice(7000)}</span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm md:text-base font-medium text-muted-foreground">
-                          ½ Medio — {formatPrice(7000)}
-                        </span>
+                      <div className="flex gap-1.5">
                         <Button
                           onClick={() => handleAdd(product, db, true)}
                           disabled={!db.available}
                           size="sm"
                           variant="outline"
-                          className={`gap-1 md:gap-1.5 rounded-full px-3 md:px-5 text-xs md:text-sm ${!storeOpen ? "text-gray-400 border-gray-300" : "text-olive border-olive hover:bg-olive/10"}`}
+                          className={`rounded-full px-2.5 md:px-3 text-xs ${!storeOpen ? "text-gray-400 border-gray-300" : "text-olive border-olive hover:bg-olive/10"}`}
                         >
-                          <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                          {storeOpen ? "½ Medio" : "Cerrado"}
+                          ½
+                        </Button>
+                        <Button
+                          onClick={() => handleAdd(product, db)}
+                          disabled={!db.available}
+                          size="sm"
+                          className={`gap-1 rounded-full px-3 md:px-4 text-xs md:text-sm ${!storeOpen ? "bg-gray-400 hover:bg-gray-500" : "bg-olive hover:bg-olive-light"} text-white`}
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                          {storeOpen ? "Agregar" : "Cerrado"}
                         </Button>
                       </div>
                     </div>
