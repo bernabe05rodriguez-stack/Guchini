@@ -15,19 +15,13 @@ export function ProductGrid({ products, type, compact = false, storeOpen = true,
   if (products.length === 0) {
     return (
       <p className="text-muted-foreground text-center py-8">
-        No hay productos disponibles en este momento
+        No hay productos disponibles
       </p>
     )
   }
 
-  const isDrink = type === "drink"
-
   return (
-    <div className={`grid ${
-      isDrink
-        ? "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6"
-        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
-    }`}>
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
       {products.map((product) => (
         <ProductCard
           key={product.id}

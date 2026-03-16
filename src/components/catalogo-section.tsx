@@ -2,7 +2,6 @@
 
 import { CATALOG_PRODUCTS } from "@/lib/constants"
 import { Sandwich, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { formatPrice } from "@/lib/utils"
 import { useCart } from "@/contexts/cart-context"
 import { toast } from "sonner"
@@ -38,47 +37,24 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
       image_url: product.image,
       isHalf: half || undefined,
     })
-    toast.success(`${half ? "Medio " : ""}${db.name} agregado al carrito`)
+    toast.success(`${half ? "Medio " : ""}${db.name} agregado`)
   }
 
   return (
-    <section id="productos" className="pt-28 md:pt-36 pb-14 md:pb-24 bg-cream">
-      <div className="container">
-        <div className="text-center mb-10 md:mb-16">
-          <span className="text-mustard font-medium text-sm uppercase tracking-widest">Nuestra carta</span>
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mt-3 mb-3 md:mb-4">
+    <section id="productos" className="pt-24 md:pt-36 pb-10 md:pb-24 bg-cream">
+      <div className="container px-4">
+        {/* Header simple */}
+        <div className="text-center mb-6 md:mb-14">
+          <h2 className="text-2xl md:text-5xl font-display font-bold text-foreground">
             Nuestro Menú
           </h2>
-          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Cada sanguche es una obra maestra culinaria, hecho con ingredientes premium y pan focaccia artesanal
+          <p className="text-sm md:text-lg text-muted-foreground mt-1 md:mt-3">
+            Sanguches artesanales con pan focaccia
           </p>
-
-          {/* Pedí y Retirá */}
-          <div className="mt-8 md:mt-10 p-5 md:p-8 bg-white rounded-2xl shadow-sm border border-border mx-auto max-w-lg md:max-w-none md:inline-block">
-            <h3 className="text-lg md:text-xl font-display font-bold text-olive mb-2 md:mb-3">
-              Pedí y Retirá
-            </h3>
-            <p className="text-sm text-muted-foreground mb-4 md:mb-5">
-              Ahorrá la fila y la espera. Elegí, pagá online y retiralo listo en el local.
-            </p>
-            <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-4 sm:gap-8 text-sm text-muted-foreground">
-              <div className="flex items-center gap-3">
-                <span className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-olive text-white flex items-center justify-center font-bold text-sm flex-shrink-0">1</span>
-                <span className="font-medium text-foreground">Elegí tu sanguche</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-olive text-white flex items-center justify-center font-bold text-sm flex-shrink-0">2</span>
-                <span className="font-medium text-foreground">Pagá online</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-olive text-white flex items-center justify-center font-bold text-sm flex-shrink-0">3</span>
-                <span className="font-medium text-foreground">Retirá sin esperar</span>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+        {/* Cards - 1 col mobile, 2 col desktop */}
+        <div className="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-5">
           {CATALOG_PRODUCTS.map((product) => {
             const db = dbProducts.find(
               (p) => p.name.toLowerCase().includes(product.name.toLowerCase()) ||
@@ -88,79 +64,74 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
             return (
               <div
                 key={product.name}
-                className={`group bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-500 ${
-                  db && !db.available ? "opacity-60 grayscale" : ""
+                className={`bg-white rounded-2xl overflow-hidden shadow-sm ${
+                  db && !db.available ? "opacity-50 grayscale" : ""
                 }`}
               >
-                <div className="relative h-36 sm:h-48 md:h-60 overflow-hidden">
-                  {product.image ? (
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none"
-                        e.currentTarget.nextElementSibling?.classList.remove("hidden")
-                      }}
-                    />
-                  ) : null}
-                  <div className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br from-olive/10 to-brown/10 ${product.image ? "hidden" : ""}`}>
-                    <Sandwich className="h-12 w-12 md:h-16 md:w-16 text-olive/20" />
-                  </div>
-                  {db && !db.available && (
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                      <span className="text-white font-semibold text-xs md:text-sm bg-black/60 px-3 py-1 rounded-full">
-                        No disponible
-                      </span>
-                    </div>
-                  )}
-                  {/* Badge */}
-                  {product.badge && (
-                    <div className="absolute top-2 left-2 md:top-3 md:left-3">
-                      <span className="text-[10px] md:text-xs font-medium text-white bg-green-600/90 backdrop-blur-sm px-2 md:px-3 py-0.5 md:py-1 rounded-full">
+                {/* Mobile: horizontal card / Desktop: vertical card */}
+                <div className="flex md:flex-col">
+                  {/* Image */}
+                  <div className="relative w-28 h-28 shrink-0 md:w-full md:h-52 overflow-hidden">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-olive/5">
+                        <Sandwich className="h-10 w-10 text-olive/20" />
+                      </div>
+                    )}
+                    {product.badge && (
+                      <span className="absolute top-2 left-2 text-[10px] font-medium text-white bg-green-600/90 px-2 py-0.5 rounded-full">
                         {product.badge}
                       </span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-3 sm:p-4 md:p-5">
-                  <h3 className="text-sm sm:text-base md:text-xl font-display font-bold text-foreground mb-1">
-                    {product.name}
-                  </h3>
-                  <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-2 md:mb-4 line-clamp-2 md:line-clamp-none min-h-0 md:min-h-[3rem]">
-                    {product.description}
-                  </p>
-
-                  {/* Precio y botones */}
-                  {db && (
-                    <div className="flex items-center justify-between pt-3 md:pt-4 border-t border-border">
-                      <div>
-                        <span className="text-lg md:text-2xl font-bold text-olive">{formatPrice(db.price)}</span>
-                        <span className="text-xs text-muted-foreground ml-1.5">/ ½ {formatPrice(7000)}</span>
+                    )}
+                    {db && !db.available && (
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <span className="text-white font-semibold text-xs bg-black/60 px-2 py-0.5 rounded-full">
+                          No disponible
+                        </span>
                       </div>
-                      <div className="flex gap-1.5">
-                        <Button
-                          onClick={() => handleAdd(product, db, true)}
-                          disabled={!db.available}
-                          size="sm"
-                          variant="outline"
-                          className={`rounded-full px-2.5 md:px-3 text-xs ${!storeOpen ? "text-gray-400 border-gray-300" : "text-olive border-olive hover:bg-olive/10"}`}
-                        >
-                          ½
-                        </Button>
-                        <Button
-                          onClick={() => handleAdd(product, db)}
-                          disabled={!db.available}
-                          size="sm"
-                          className={`gap-1 rounded-full px-3 md:px-4 text-xs md:text-sm ${!storeOpen ? "bg-gray-400 hover:bg-gray-500" : "bg-olive hover:bg-olive-light"} text-white`}
-                        >
-                          <Plus className="h-3.5 w-3.5" />
-                          {storeOpen ? "Agregar" : "Cerrado"}
-                        </Button>
-                      </div>
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 p-3 md:p-4 flex flex-col justify-between min-w-0">
+                    <div>
+                      <h3 className="font-display font-bold text-base md:text-lg text-foreground">
+                        {product.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                        {product.description}
+                      </p>
                     </div>
-                  )}
+
+                    {db && (
+                      <div className="flex items-center justify-between mt-2.5 md:mt-3">
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-lg font-bold text-olive">{formatPrice(db.price)}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => handleAdd(product, db, true)}
+                            disabled={!db.available || !storeOpen}
+                            className="h-9 px-3 rounded-full border border-olive/30 text-olive text-xs font-semibold hover:bg-olive/5 active:bg-olive/10 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            ½ {formatPrice(7000)}
+                          </button>
+                          <button
+                            onClick={() => handleAdd(product, db)}
+                            disabled={!db.available || !storeOpen}
+                            className="h-9 w-9 rounded-full bg-olive text-white flex items-center justify-center hover:bg-olive-light active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            <Plus className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )

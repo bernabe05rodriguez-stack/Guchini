@@ -36,16 +36,12 @@ export default async function HomePage() {
       <CatalogoSection dbProducts={sandwichData} storeOpen={storeOpen} storeMessage={storeMessage} />
 
       {/* Bebidas */}
-      <section className="py-14 md:py-24 bg-white">
-        <div className="container">
-          <div className="text-center mb-8 md:mb-14">
-            <span className="text-mustard font-medium text-sm uppercase tracking-widest">Complementos</span>
-            <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mt-3 mb-3 md:mb-4">
-              Para Acompañar
+      <section className="py-10 md:py-20 bg-white">
+        <div className="container px-4">
+          <div className="text-center mb-5 md:mb-10">
+            <h2 className="text-2xl md:text-4xl font-display font-bold text-foreground">
+              Bebidas
             </h2>
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
-              Completá tu combo con la bebida perfecta
-            </p>
           </div>
           <ProductGrid products={drinkData} type="drink" storeOpen={storeOpen} storeMessage={storeMessage} />
         </div>
