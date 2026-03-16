@@ -11,7 +11,7 @@ export function LocalesSection() {
             Nuestros Locales
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Visitanos y probá la experiencia Guchini
+            Vení a conocernos
           </p>
         </div>
 
@@ -26,7 +26,7 @@ export function LocalesSection() {
                   </div>
                   <div>
                     <h3 className="text-2xl font-display font-bold text-foreground">
-                      Guchini &ldquo;La Casa&rdquo;
+                      Local Principal
                     </h3>
                     <p className="text-sm text-mustard font-semibold">Mendoza, Argentina</p>
                   </div>
@@ -70,7 +70,7 @@ export function LocalesSection() {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Ubicación Guchini"
+                  title="Ubicación del local"
                 />
               </div>
             </div>

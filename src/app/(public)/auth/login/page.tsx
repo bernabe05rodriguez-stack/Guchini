@@ -48,7 +48,7 @@ function LoginContent() {
     <div className="min-h-[60vh] flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-display">Bienvenido a Guchini</CardTitle>
+          <CardTitle className="text-3xl font-display">Bienvenido a TAKE</CardTitle>
           <CardDescription>
             Iniciá sesión para hacer tu pedido
           </CardDescription>

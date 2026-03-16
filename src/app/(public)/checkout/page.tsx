@@ -42,10 +42,11 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           items: items.map(item => ({
             item_type: item.type,
-            item_id: item.id,
+            item_id: item.isHalf ? item.id.replace(/-half$/, "") : item.id,
             item_name: item.name,
             quantity: item.quantity,
             unit_price: item.price,
+            is_half: item.isHalf || false,
           })),
           notes,
           estimated_wait_minutes: estimatedWait,

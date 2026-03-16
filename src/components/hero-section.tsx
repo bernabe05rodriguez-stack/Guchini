@@ -3,7 +3,7 @@
 import { MapPin, ChevronDown } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { STORE_ADDRESS } from "@/lib/constants"
+import { STORE_NAME, STORE_ADDRESS, STORE_TAGLINE } from "@/lib/constants"
 
 interface HeroSectionProps {
   storeOpen: boolean
@@ -16,7 +16,7 @@ export function HeroSection({ storeOpen, storeMessage }: HeroSectionProps) {
   }
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-olive">
+    <section id="home" className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-olive">
       {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center scale-105"
@@ -26,7 +26,7 @@ export function HeroSection({ storeOpen, storeMessage }: HeroSectionProps) {
       {/* Dark overlay with gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-olive/80 via-olive/60 to-olive/80" />
 
-      <div className="container relative text-center py-20 md:py-32">
+      <div className="container relative text-center py-20 md:py-28">
         <Badge
           className={`mb-6 md:mb-8 text-sm px-4 md:px-5 py-2 md:py-2.5 rounded-full backdrop-blur-sm ${
             storeOpen
@@ -35,15 +35,15 @@ export function HeroSection({ storeOpen, storeMessage }: HeroSectionProps) {
           }`}
         >
           <span className={`inline-block w-2 h-2 rounded-full mr-2 ${storeOpen ? "bg-green-400 animate-pulse" : "bg-red-400"}`} />
-          {storeOpen ? "Local abierto" : "Local cerrado"}
+          {storeOpen ? "Abierto ahora" : "Cerrado"}
         </Badge>
 
         <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-display font-bold text-white mb-4 md:mb-6 leading-[0.9] tracking-tight">
-          Un Manso<br />Sanguche
+          {STORE_NAME}
         </h1>
 
         <p className="text-base md:text-xl text-white/80 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed px-4">
-          El perfecto equilibrio del Fast Food y lo Gourmet, todo en un Guchini
+          {STORE_TAGLINE}. Pedí online, retirá en el local.
         </p>
 
         {/* CTA Button */}
@@ -52,7 +52,7 @@ export function HeroSection({ storeOpen, storeMessage }: HeroSectionProps) {
             onClick={() => scrollTo("#productos")}
             className="bg-mustard hover:bg-mustard-light text-foreground font-bold px-8 py-6 text-base rounded-full shadow-lg hover:shadow-xl transition-all"
           >
-            Nuestros Sanguchinis
+            Ver Menú
           </Button>
         </div>
 

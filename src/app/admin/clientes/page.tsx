@@ -39,7 +39,7 @@ export default function AdminClientesPage() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = "clientes-guchini.csv"
+    a.download = "clientes-take.csv"
     a.click()
     URL.revokeObjectURL(url)
   }

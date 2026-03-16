@@ -83,6 +83,7 @@ export interface CartItem {
   price: number
   image_url: string | null
   quantity: number
+  isHalf?: boolean
 }
 
 export interface OrderWithItems extends Order {

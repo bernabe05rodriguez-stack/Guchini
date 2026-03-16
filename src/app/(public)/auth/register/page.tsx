@@ -55,7 +55,7 @@ function RegisterContent() {
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-display">Crear cuenta</CardTitle>
           <CardDescription>
-            Registrate para hacer pedidos en Guchini
+            Registrate para hacer tus pedidos
           </CardDescription>
         </CardHeader>
         <CardContent>

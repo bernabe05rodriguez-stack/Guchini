@@ -14,12 +14,12 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: "Guchini — Un Manso Sanguche",
-  description: "Pedí online tu sándwich artesanal en pan focaccia y retiralo en el local. Street food premium en Mendoza.",
+  title: "TAKE — Pedidos Online",
+  description: "Pedí online, pagá y retirá en el local. Plataforma de pedidos rápidos.",
   openGraph: {
-    title: "Guchini — Un Manso Sanguche",
-    description: "Sándwiches artesanales en pan focaccia. Pedí online, pasá a buscar.",
-    siteName: "Guchini",
+    title: "TAKE — Pedidos Online",
+    description: "Pedí online, pagá y retirá en el local sin esperar.",
+    siteName: "TAKE",
     locale: "es_AR",
     type: "website",
   },

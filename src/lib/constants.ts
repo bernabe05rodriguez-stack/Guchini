@@ -1,5 +1,6 @@
 export const STORE_NAME = "Guchini"
-export const STORE_TAGLINE = "Un Manso Sanguche"
+export const STORE_TAGLINE = "Sándwiches artesanales"
+export const PLATFORM_NAME = "TAKE"
 export const STORE_ADDRESS = "San Lorenzo 577, M5502 Mendoza"
 export const STORE_INSTAGRAM = "@guchini.ar"
 export const STORE_TIKTOK = "@guchini.ar"
@@ -45,8 +46,7 @@ export function getStoreStatus(): { isOpen: boolean; message: string } {
   return { isOpen: false, message: "Abrimos mañana a las 8:00" }
 }
 export const STORE_MAPS_URL = "https://www.google.com/maps/place/San+Lorenzo+577,+M5502+Mendoza"
-export const STORE_FRANCHISE_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSc_guchini_franquicias/viewform"
-export const ORDER_PREFIX = "GUCH"
+export const ORDER_PREFIX = "TAKE"
 
 export const CATALOG_PRODUCTS = [
   {
@@ -75,30 +75,3 @@ export const CATALOG_PRODUCTS = [
   },
 ]
 
-export const TIMELINE_EVENTS = [
-  {
-    month: "Enero 2024",
-    title: "El Comienzo",
-    description: "Cuatro emprendedores con una visión compartida dan vida a Guchini.",
-  },
-  {
-    month: "Abril 2024",
-    title: "Conceptualización",
-    description: "Definimos nuestro producto: el perfecto equilibrio entre fast food y gourmet.",
-  },
-  {
-    month: "Mayo 2024",
-    title: "Investigación Gastronómica",
-    description: "Viaje de investigación para perfeccionar recetas e ingredientes.",
-  },
-  {
-    month: "Octubre 2024",
-    title: "Estrategia de Marketing",
-    description: "Desarrollamos una estrategia de marketing innovadora para el lanzamiento.",
-  },
-  {
-    month: "Noviembre 2024",
-    title: "Gran Apertura",
-    description: "Abrimos nuestras puertas con 1.200 visitantes el primer día.",
-  },
-]

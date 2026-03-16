@@ -4,8 +4,6 @@ import { prisma } from "@/lib/db"
 import { HeroSection } from "@/components/hero-section"
 import { CatalogoSection } from "@/components/catalogo-section"
 import { ProductGrid } from "@/components/product-grid"
-import { FranquiciasSection } from "@/components/franquicias-section"
-import { HistoriaSection } from "@/components/historia-section"
 import { getStoreStatus } from "@/lib/constants"
 
 export default async function HomePage() {
@@ -56,9 +54,6 @@ export default async function HomePage() {
           <ProductGrid products={drinkData} type="drink" storeOpen={storeOpen} storeMessage={storeMessage} />
         </div>
       </section>
-
-      <FranquiciasSection />
-      <HistoriaSection />
     </>
   )
 }

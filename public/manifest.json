@@ -1,7 +1,7 @@
 {
-  "name": "Guchini - Un Manso Sanguche",
-  "short_name": "Guchini",
-  "description": "Pedí tu sándwich artesanal online y retiralo en el local",
+  "name": "TAKE - Pedidos Online",
+  "short_name": "TAKE",
+  "description": "Pedí online, pagá y retirá en el local",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F5F0E8",

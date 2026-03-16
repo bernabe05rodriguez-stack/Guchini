@@ -24,20 +24,21 @@ interface CatalogoSectionProps {
 export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: CatalogoSectionProps) {
   const { addItem } = useCart()
 
-  const handleAdd = (product: typeof CATALOG_PRODUCTS[0], db: DbProduct) => {
+  const handleAdd = (product: typeof CATALOG_PRODUCTS[0], db: DbProduct, half = false) => {
     if (!db.available) return
     if (!storeOpen) {
       toast.error(`Local cerrado. ${storeMessage}`)
       return
     }
     addItem({
-      id: db.id,
+      id: half ? `${db.id}-half` : db.id,
       type: "sandwich",
-      name: db.name,
-      price: db.price,
+      name: half ? `${db.name} (Medio)` : db.name,
+      price: half ? 7000 : db.price,
       image_url: product.image,
+      isHalf: half || undefined,
     })
-    toast.success(`${db.name} agregado al carrito`)
+    toast.success(`${half ? "Medio " : ""}${db.name} agregado al carrito`)
   }
 
   return (
@@ -46,7 +47,7 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
         <div className="text-center mb-10 md:mb-16">
           <span className="text-mustard font-medium text-sm uppercase tracking-widest">Nuestra carta</span>
           <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mt-3 mb-3 md:mb-4">
-            Nuestros Sanguchinis
+            Nuestro Menú
           </h2>
           <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
             Cada sanguche es una obra maestra culinaria, hecho con ingredientes premium y pan focaccia artesanal
@@ -58,7 +59,7 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
               Pedí y Retirá
             </h3>
             <p className="text-sm text-muted-foreground mb-4 md:mb-5">
-              Ahorrá la fila y la espera. Elegí tu Guchini, pagá online y retiralo listo en el local.
+              Ahorrá la fila y la espera. Elegí, pagá online y retiralo listo en el local.
             </p>
             <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-4 sm:gap-8 text-sm text-muted-foreground">
               <div className="flex items-center gap-3">
@@ -131,21 +132,38 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
                     {product.description}
                   </p>
 
-                  {/* Precio y botón */}
+                  {/* Precio y botones */}
                   {db && (
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-3 md:pt-4 border-t border-border">
-                      <span className="text-lg md:text-2xl font-bold text-olive">
-                        {formatPrice(db.price)}
-                      </span>
-                      <Button
-                        onClick={() => handleAdd(product, db)}
-                        disabled={!db.available}
-                        size="sm"
-                        className={`gap-1 md:gap-1.5 rounded-full px-3 md:px-5 text-xs md:text-sm w-full sm:w-auto ${!storeOpen ? "bg-gray-400 hover:bg-gray-500" : "bg-olive hover:bg-olive-light"} text-white`}
-                      >
-                        <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" />
-                        {storeOpen ? "Agregar" : "Cerrado"}
-                      </Button>
+                    <div className="flex flex-col gap-2 pt-3 md:pt-4 border-t border-border">
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg md:text-2xl font-bold text-olive">
+                          {formatPrice(db.price)}
+                        </span>
+                        <Button
+                          onClick={() => handleAdd(product, db)}
+                          disabled={!db.available}
+                          size="sm"
+                          className={`gap-1 md:gap-1.5 rounded-full px-3 md:px-5 text-xs md:text-sm ${!storeOpen ? "bg-gray-400 hover:bg-gray-500" : "bg-olive hover:bg-olive-light"} text-white`}
+                        >
+                          <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                          {storeOpen ? "Agregar" : "Cerrado"}
+                        </Button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm md:text-base font-medium text-muted-foreground">
+                          ½ Medio — {formatPrice(7000)}
+                        </span>
+                        <Button
+                          onClick={() => handleAdd(product, db, true)}
+                          disabled={!db.available}
+                          size="sm"
+                          variant="outline"
+                          className={`gap-1 md:gap-1.5 rounded-full px-3 md:px-5 text-xs md:text-sm ${!storeOpen ? "text-gray-400 border-gray-300" : "text-olive border-olive hover:bg-olive/10"}`}
+                        >
+                          <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                          {storeOpen ? "½ Medio" : "Cerrado"}
+                        </Button>
+                      </div>
                     </div>
                   )}
                 </div>

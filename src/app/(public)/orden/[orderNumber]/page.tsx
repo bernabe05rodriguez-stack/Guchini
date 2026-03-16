@@ -27,7 +27,7 @@ const STATUS_CONFIG = {
   preparing: {
     icon: ChefHat,
     title: "Preparando tu pedido",
-    subtitle: "Nuestro equipo está preparando tu sanguche",
+    subtitle: "Nuestro equipo está preparando tu pedido",
     color: "text-yellow-600",
     bg: "bg-yellow-50",
     border: "border-yellow-200",

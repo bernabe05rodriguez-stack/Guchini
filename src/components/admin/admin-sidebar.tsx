@@ -40,7 +40,7 @@ export function AdminSidebar() {
       <div className="p-6 border-b border-white/10">
         <Link href="/admin">
           <h1 className="text-2xl font-display font-bold text-mustard">
-            Guchini
+            TAKE
           </h1>
           <p className="text-xs text-white/40 mt-1">Panel de administración</p>
         </Link>

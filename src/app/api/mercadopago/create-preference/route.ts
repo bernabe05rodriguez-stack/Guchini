@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       back_urls: { success: `${baseUrl}/pago/success?order=${orderNumber}`, failure: `${baseUrl}/pago/failure?order=${orderNumber}`, pending: `${baseUrl}/pago/pending?order=${orderNumber}` },
       auto_return: "approved",
       external_reference: orderNumber,
-      statement_descriptor: "GUCHINI",
+      statement_descriptor: "TAKE",
     }
 
     // MercadoPago rechaza notification_url con localhost (error CPT01)

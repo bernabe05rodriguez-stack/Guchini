@@ -16,9 +16,7 @@ interface UserData {
 
 const NAV_LINKS = [
   { label: "Home", href: "#home" },
-  { label: "Sanguchinis", href: "#productos" },
-  { label: "Franquicias", href: "#franquicias" },
-  { label: "Nosotros", href: "#historia" },
+  { label: "Menú", href: "#productos" },
 ]
 
 export function Navbar() {
@@ -71,7 +69,7 @@ export function Navbar() {
       <div className="container flex items-center justify-between py-2 md:py-3">
         {/* Logo */}
         <Link href="/" className="flex items-center" onClick={() => handleNavClick("#home")}>
-          <Image src="/logo.png" alt="Guchini" width={72} height={72} className="rounded-full md:w-[112px] md:h-[112px]" />
+          <Image src="/logo.png" alt="TAKE" width={72} height={72} className="rounded-full md:w-[112px] md:h-[112px]" />
         </Link>
 
         {/* Desktop nav links */}

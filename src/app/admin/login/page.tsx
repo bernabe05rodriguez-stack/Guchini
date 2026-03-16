@@ -44,7 +44,7 @@ export default function AdminLoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <Lock className="h-10 w-10 mx-auto text-olive mb-2" />
-          <CardTitle className="text-2xl">Admin Guchini</CardTitle>
+          <CardTitle className="text-2xl">Admin TAKE</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

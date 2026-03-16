@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
     if (!items || items.length === 0) return NextResponse.json({ error: "Carrito vacío" }, { status: 400 })
 
     // Server-side price validation
+    const HALF_SANDWICH_PRICE = 7000
     const enrichedItems = []
     for (const item of items) {
       if (!item.item_id || !item.item_type || !item.quantity || item.quantity < 1 || !Number.isInteger(item.quantity)) {
@@ -29,11 +30,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Cantidad máxima por item: 50" }, { status: 400 })
       }
 
+      const isHalf = item.is_half === true
+
       let dbItem: { price: number; name: string; available: boolean } | null = null
       if (item.item_type === "sandwich") {
         const s = await prisma.sandwich.findUnique({ where: { id: item.item_id }, select: { price: true, name: true, available: true } })
         if (s) dbItem = { price: Number(s.price), name: s.name, available: s.available }
       } else if (item.item_type === "drink") {
+        if (isHalf) return NextResponse.json({ error: "Solo sanguches tienen opción medio" }, { status: 400 })
         const d = await prisma.drink.findUnique({ where: { id: item.item_id }, select: { price: true, name: true, available: true } })
         if (d) dbItem = { price: Number(d.price), name: d.name, available: d.available }
       } else {
@@ -43,13 +47,16 @@ export async function POST(request: NextRequest) {
       if (!dbItem) return NextResponse.json({ error: `Item no encontrado: ${item.item_id}` }, { status: 400 })
       if (!dbItem.available) return NextResponse.json({ error: `"${dbItem.name}" no está disponible` }, { status: 400 })
 
+      const unitPrice = isHalf ? HALF_SANDWICH_PRICE : dbItem.price
+      const itemName = isHalf ? `${dbItem.name} (Medio)` : dbItem.name
+
       enrichedItems.push({
         itemType: item.item_type,
         itemId: item.item_id,
-        itemName: dbItem.name,
+        itemName,
         quantity: item.quantity,
-        unitPrice: dbItem.price,
-        subtotal: dbItem.price * item.quantity,
+        unitPrice,
+        subtotal: unitPrice * item.quantity,
       })
     }
 
