@@ -39,7 +39,7 @@ export function Navbar() {
       <div className="container px-4 flex items-center justify-between h-14 md:h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center shrink-0">
-          <Image src="/logo.png" alt="TAKE" width={40} height={40} className="rounded-full md:w-[56px] md:h-[56px]" />
+          <Image src="/logo.png" alt="Guchini" width={100} height={40} className="h-8 w-auto md:h-10" />
         </Link>
 
         {/* Location badge - always visible */}
