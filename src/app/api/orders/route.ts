@@ -85,6 +85,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ...order, order_number: order.orderNumber })
   } catch (error) {
     console.error("Order error:", error)
-    return NextResponse.json({ error: "Error interno" }, { status: 500 })
+    const msg = error instanceof Error ? error.message : String(error)
+    return NextResponse.json({ error: "Error interno", debug: msg }, { status: 500 })
   }
 }
