@@ -41,21 +41,25 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
   }
 
   return (
-    <section id="productos" className="pt-24 md:pt-36 pb-10 md:pb-24 bg-cream">
+    <section id="productos" className="pt-10 md:pt-16 pb-10 md:pb-24 bg-cream">
       <div className="container px-4">
-        {/* Header simple */}
-        <div className="text-center mb-6 md:mb-14">
-          <h2 className="text-2xl md:text-5xl font-display font-bold text-foreground">
-            Nuestro Menú
+        {/* Header */}
+        <div className="text-center mb-8 md:mb-16">
+          <p className="text-xs md:text-sm font-medium tracking-[0.2em] uppercase text-olive/60 mb-2 md:mb-3">
+            Seleccion artesanal
+          </p>
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground">
+            Nuestro Menu
           </h2>
-          <p className="text-sm md:text-lg text-muted-foreground mt-1 md:mt-3">
+          <div className="w-12 h-0.5 bg-mustard mx-auto mt-3 md:mt-5 rounded-full" />
+          <p className="text-sm md:text-lg text-muted-foreground mt-3 md:mt-4 max-w-md mx-auto">
             Sanguches artesanales con pan focaccia
           </p>
         </div>
 
-        {/* Cards - 1 col mobile, 2 col desktop */}
+        {/* Cards */}
         <div className="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-5">
-          {CATALOG_PRODUCTS.map((product) => {
+          {CATALOG_PRODUCTS.map((product, index) => {
             const db = dbProducts.find(
               (p) => p.name.toLowerCase().includes(product.name.toLowerCase()) ||
                      product.name.toLowerCase().includes(p.name.toLowerCase())
@@ -64,19 +68,20 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
             return (
               <div
                 key={product.name}
-                className={`bg-white rounded-2xl overflow-hidden shadow-sm ${
+                className={`group bg-white rounded-2xl overflow-hidden shadow-elegant transition-all duration-500 hover:shadow-elevated hover:-translate-y-1 animate-fade-in-up ${
                   db && !db.available ? "opacity-50 grayscale" : ""
                 }`}
+                style={{ animationDelay: `${index * 0.08}s` }}
               >
-                {/* Mobile: horizontal card / Desktop: vertical card */}
+                {/* Mobile: horizontal / Desktop: vertical */}
                 <div className="flex md:flex-col">
                   {/* Image */}
-                  <div className="relative w-28 h-28 shrink-0 md:w-full md:h-52 overflow-hidden">
+                  <div className="relative w-28 h-28 shrink-0 md:w-full md:h-56 overflow-hidden">
                     {product.image ? (
                       <img
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-olive/5">
@@ -84,7 +89,7 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
                       </div>
                     )}
                     {product.badge && (
-                      <span className="absolute top-2 left-2 text-[10px] font-medium text-white bg-green-600/90 px-2 py-0.5 rounded-full">
+                      <span className="absolute top-2.5 left-2.5 text-[10px] font-semibold text-white bg-olive/90 backdrop-blur-sm px-2.5 py-1 rounded-full tracking-wide uppercase">
                         {product.badge}
                       </span>
                     )}
@@ -98,12 +103,12 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
                   </div>
 
                   {/* Info */}
-                  <div className="flex-1 p-3 md:p-4 flex flex-col justify-between min-w-0">
+                  <div className="flex-1 p-3.5 md:p-5 flex flex-col justify-between min-w-0">
                     <div>
-                      <h3 className="font-display font-bold text-base md:text-lg text-foreground">
+                      <h3 className="font-display font-bold text-base md:text-lg text-foreground tracking-tight">
                         {product.name}
                       </h3>
-                      <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                      <p className="text-xs md:text-sm text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
                         {product.description}
                       </p>
                     </div>
@@ -117,14 +122,14 @@ export function CatalogoSection({ dbProducts, storeOpen, storeMessage }: Catalog
                           <button
                             onClick={() => handleAdd(product, db, true)}
                             disabled={!db.available || !storeOpen}
-                            className="h-9 px-3 rounded-full border border-olive/30 text-olive text-xs font-semibold hover:bg-olive/5 active:bg-olive/10 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="h-9 px-3 rounded-full border border-olive/30 text-olive text-xs font-semibold hover:bg-olive/5 active:bg-olive/10 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             ½ {formatPrice(7000)}
                           </button>
                           <button
                             onClick={() => handleAdd(product, db)}
                             disabled={!db.available || !storeOpen}
-                            className="h-9 w-9 rounded-full bg-olive text-white flex items-center justify-center hover:bg-olive-light active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                            className="h-9 w-9 rounded-full bg-olive text-white flex items-center justify-center hover:bg-olive-light hover:scale-110 active:scale-95 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
                           >
                             <Plus className="h-4 w-4" />
                           </button>

@@ -115,11 +115,14 @@ export default function CheckoutPage() {
   const locationLabel = location === "chacras" ? "Chacras" : location === "lacasa" ? "La Casa" : "No seleccionado"
 
   return (
-    <div className="container max-w-2xl py-8 space-y-6">
-      <h1 className="text-3xl font-display font-bold">Confirmar pedido</h1>
+    <div className="container max-w-2xl py-10 md:py-16 space-y-6 animate-fade-in-up">
+      <div className="text-center md:text-left">
+        <h1 className="text-3xl md:text-4xl font-display font-bold tracking-tight">Confirmar pedido</h1>
+        <p className="text-muted-foreground mt-1 text-sm">Completá tus datos para finalizar</p>
+      </div>
 
       {/* Location */}
-      <Card>
+      <Card className="shadow-elegant border-olive/5">
         <CardContent className="flex items-center justify-between py-4">
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Retiro en:</span>
@@ -129,7 +132,7 @@ export default function CheckoutPage() {
       </Card>
 
       {/* Customer data form */}
-      <Card>
+      <Card className="shadow-elegant border-olive/5">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <User className="h-5 w-5" />
@@ -146,7 +149,7 @@ export default function CheckoutPage() {
                 placeholder="Tu nombre completo"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="pl-10"
+                className="pl-10 transition-all duration-300 focus:shadow-elegant focus:border-olive/30"
               />
             </div>
           </div>
@@ -160,7 +163,7 @@ export default function CheckoutPage() {
                 placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10"
+                className="pl-10 transition-all duration-300 focus:shadow-elegant focus:border-olive/30"
               />
             </div>
           </div>
@@ -174,7 +177,7 @@ export default function CheckoutPage() {
                 placeholder="261 123 4567"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="pl-10"
+                className="pl-10 transition-all duration-300 focus:shadow-elegant focus:border-olive/30"
               />
             </div>
           </div>
@@ -182,7 +185,7 @@ export default function CheckoutPage() {
       </Card>
 
       {/* Order summary */}
-      <Card>
+      <Card className="shadow-elegant border-olive/5">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <ShoppingBag className="h-5 w-5" />
@@ -211,19 +214,21 @@ export default function CheckoutPage() {
 
       {/* Estimated wait */}
       {estimatedWait !== null && (
-        <Card>
-          <CardContent className="flex items-center gap-3 py-4">
-            <Clock className="h-5 w-5 text-olive" />
+        <Card className="shadow-elegant border-olive/10 bg-olive/5">
+          <CardContent className="flex items-center gap-4 py-5">
+            <div className="w-12 h-12 rounded-full bg-olive/10 flex items-center justify-center">
+              <Clock className="h-5 w-5 text-olive" />
+            </div>
             <div>
-              <p className="font-medium">Tiempo estimado de espera</p>
-              <p className="text-2xl font-bold text-olive">~{estimatedWait} minutos</p>
+              <p className="font-medium text-sm text-muted-foreground">Tiempo estimado de espera</p>
+              <p className="text-2xl font-bold text-olive font-display">~{estimatedWait} min</p>
             </div>
           </CardContent>
         </Card>
       )}
 
       {/* Notes */}
-      <Card>
+      <Card className="shadow-elegant border-olive/5">
         <CardContent className="py-4 space-y-2">
           <Label htmlFor="notes">¿Alguna aclaración?</Label>
           <Textarea
@@ -232,6 +237,7 @@ export default function CheckoutPage() {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             maxLength={500}
+            className="transition-all duration-300 focus:shadow-elegant focus:border-olive/30"
           />
         </CardContent>
       </Card>
@@ -239,7 +245,7 @@ export default function CheckoutPage() {
       {/* Pay button */}
       <Button
         size="lg"
-        className="w-full bg-mustard hover:bg-mustard-dark text-foreground font-bold text-lg h-14 gap-2"
+        className="w-full bg-mustard hover:bg-mustard-dark text-foreground font-bold text-lg h-14 gap-2 rounded-xl shadow-elegant hover:shadow-elevated active:scale-[0.98]"
         onClick={handlePay}
         disabled={loading}
       >

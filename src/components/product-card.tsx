@@ -42,16 +42,16 @@ export function ProductCard({ product, type, storeOpen = true, storeMessage = ""
   }
 
   return (
-    <div className={`bg-white rounded-2xl overflow-hidden shadow-sm ${!product.available ? "opacity-50 grayscale" : ""}`}>
+    <div className={`group bg-white rounded-2xl overflow-hidden shadow-elegant transition-all duration-500 hover:shadow-elevated hover:-translate-y-1 ${!product.available ? "opacity-50 grayscale" : ""}`}>
       {/* Image */}
-      <div className="relative h-32 md:h-44 bg-white overflow-hidden flex items-center justify-center p-3">
+      <div className="relative h-36 md:h-48 bg-cream/30 overflow-hidden flex items-center justify-center p-3">
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, 33vw"
-            className="object-contain p-2"
+            className="object-contain p-2 transition-transform duration-700 group-hover:scale-110"
           />
         ) : (
           <GlassWater className="h-10 w-10 text-olive/20" />
@@ -66,18 +66,18 @@ export function ProductCard({ product, type, storeOpen = true, storeMessage = ""
       </div>
 
       {/* Info */}
-      <div className="px-3 pb-3 pt-1">
+      <div className="px-3.5 pb-3.5 pt-1.5">
         <h3 className="font-display font-bold text-sm md:text-base text-foreground text-center truncate">
           {product.name}
         </h3>
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center justify-between mt-2.5">
           <span className="text-base font-bold text-olive">
             {formatPrice(Number(product.price))}
           </span>
           <button
             onClick={handleAdd}
             disabled={!product.available || !storeOpen}
-            className="h-8 w-8 rounded-full bg-olive text-white flex items-center justify-center active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="h-8 w-8 rounded-full bg-olive text-white flex items-center justify-center hover:bg-olive-light hover:scale-110 active:scale-95 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm hover:shadow-md"
           >
             <Plus className="h-4 w-4" />
           </button>

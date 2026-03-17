@@ -123,28 +123,36 @@ export default function OrderConfirmationPage() {
   const StatusIcon = config?.icon || CheckCircle2
 
   return (
-    <div className="container max-w-lg py-8 space-y-6">
+    <div className="container max-w-lg py-10 md:py-16 space-y-6 animate-fade-in-up">
       {isPaid && order.status === "paid" && <ConfettiTrigger />}
 
       {/* Status header */}
-      <div className="text-center space-y-3">
-        <StatusIcon className={`h-16 w-16 mx-auto ${config?.color || "text-green-500"} ${order.status === "ready" ? "animate-bounce" : ""}`} />
-        <h1 className="text-2xl font-display font-bold">
+      <div className="text-center space-y-4">
+        <div className={`w-20 h-20 rounded-full ${config?.bg || "bg-green-50"} mx-auto flex items-center justify-center`}>
+          <StatusIcon className={`h-10 w-10 ${config?.color || "text-green-500"} ${order.status === "ready" ? "animate-bounce" : ""}`} />
+        </div>
+        <h1 className="text-2xl md:text-3xl font-display font-bold tracking-tight">
           {config?.title || "Pedido registrado"}
         </h1>
-        <p className="text-muted-foreground">{config?.subtitle}</p>
+        <p className="text-muted-foreground max-w-xs mx-auto">{config?.subtitle}</p>
       </div>
 
       {/* Progress steps */}
       {isPaid && config && (
-        <div className="flex items-center justify-center gap-2 px-4">
+        <div className="flex items-center justify-center gap-1.5 md:gap-2 px-4">
           {["Confirmado", "Preparando", "Listo", "Entregado"].map((label, i) => {
             const stepNum = i + 1
             const isActive = config.step >= stepNum
             return (
               <div key={label} className="flex-1 text-center">
-                <div className={`h-2 rounded-full mb-1 transition-colors ${isActive ? "bg-olive" : "bg-gray-200"}`} />
-                <span className={`text-[10px] ${isActive ? "text-olive font-medium" : "text-gray-400"}`}>
+                <div className={`h-1.5 rounded-full mb-1.5 transition-all duration-700 ${
+                  isActive
+                    ? "bg-gradient-to-r from-olive to-olive-light"
+                    : "bg-gray-200"
+                }`} />
+                <span className={`text-[10px] md:text-xs transition-colors duration-500 ${
+                  isActive ? "text-olive font-semibold" : "text-gray-400"
+                }`}>
                   {label}
                 </span>
               </div>
@@ -154,9 +162,9 @@ export default function OrderConfirmationPage() {
       )}
 
       {/* Order number */}
-      <Card className={`border-2 ${config?.border || "border-olive"} ${config?.bg || "bg-white"}`}>
-        <CardContent className="py-8 text-center">
-          <p className="text-sm text-muted-foreground mb-2">Tu número de orden:</p>
+      <Card className={`border-2 ${config?.border || "border-olive"} ${config?.bg || "bg-white"} shadow-elevated`}>
+        <CardContent className="py-10 text-center">
+          <p className="text-xs tracking-[0.2em] uppercase text-muted-foreground mb-3">Tu número de orden</p>
           <div className="text-5xl md:text-7xl font-display font-black text-olive tracking-wider">
             {orderNumber}
           </div>
@@ -174,7 +182,7 @@ export default function OrderConfirmationPage() {
 
       {/* Ready alert */}
       {order.status === "ready" && (
-        <Card className="border-2 border-green-400 bg-green-50">
+        <Card className="border-2 border-green-400 bg-green-50 shadow-elevated">
           <CardContent className="py-6 text-center space-y-2">
             <Bell className="h-10 w-10 text-green-500 mx-auto animate-bounce" />
             <p className="text-xl font-display font-bold text-green-700">
@@ -187,14 +195,16 @@ export default function OrderConfirmationPage() {
         </Card>
       )}
 
-      {/* Wait time - only show if not ready/delivered */}
+      {/* Wait time */}
       {order.estimated_wait_minutes && !["ready", "delivered"].includes(order.status) && (
-        <Card>
-          <CardContent className="flex items-center gap-3 py-4">
-            <Clock className="h-5 w-5 text-olive" />
+        <Card className="shadow-elegant">
+          <CardContent className="flex items-center gap-4 py-5">
+            <div className="w-12 h-12 rounded-full bg-olive/10 flex items-center justify-center">
+              <Clock className="h-5 w-5 text-olive" />
+            </div>
             <div>
               <p className="text-sm text-muted-foreground">Tiempo estimado</p>
-              <p className="text-xl font-bold text-olive">~{order.estimated_wait_minutes} minutos</p>
+              <p className="text-xl font-bold text-olive font-display">~{order.estimated_wait_minutes} min</p>
             </div>
           </CardContent>
         </Card>
@@ -202,9 +212,11 @@ export default function OrderConfirmationPage() {
 
       {/* Pickup info */}
       {!["ready", "delivered"].includes(order.status) && (
-        <Card>
-          <CardContent className="flex items-center gap-3 py-4">
-            <MapPin className="h-5 w-5 text-brown" />
+        <Card className="shadow-elegant">
+          <CardContent className="flex items-center gap-4 py-5">
+            <div className="w-12 h-12 rounded-full bg-brown/10 flex items-center justify-center">
+              <MapPin className="h-5 w-5 text-brown" />
+            </div>
             <div>
               <p className="font-medium">Retirá en el local</p>
               <p className="text-sm text-muted-foreground">
@@ -216,7 +228,7 @@ export default function OrderConfirmationPage() {
       )}
 
       {/* Order details */}
-      <Card>
+      <Card className="shadow-elegant">
         <CardContent className="py-4 space-y-3">
           <h3 className="font-display font-bold">Detalle del pedido</h3>
           {order.order_items?.map((item) => (
@@ -235,7 +247,7 @@ export default function OrderConfirmationPage() {
 
       {/* Back link */}
       <div className="text-center">
-        <Button variant="outline" asChild>
+        <Button variant="outline" asChild className="shadow-elegant">
           <Link href="/">Volver al inicio</Link>
         </Button>
       </div>
