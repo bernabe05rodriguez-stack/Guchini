@@ -1,7 +1,6 @@
 export const dynamic = "force-dynamic"
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/db"
-import { generateOrderNumber } from "@/lib/utils"
 import { rateLimit } from "@/lib/rate-limit"
 
 export async function POST(request: NextRequest) {
@@ -62,8 +61,16 @@ export async function POST(request: NextRequest) {
     }
 
     const subtotal = enrichedItems.reduce((sum, item) => sum + item.subtotal, 0)
-    const count = await prisma.order.count()
-    const orderNumber = generateOrderNumber(count)
+
+    // Find the highest existing order number to avoid collisions
+    const lastOrder = await prisma.order.findFirst({
+      orderBy: { createdAt: "desc" },
+      select: { orderNumber: true },
+    })
+    const lastNum = lastOrder
+      ? parseInt(lastOrder.orderNumber.replace("GUCH-", ""), 10) || 0
+      : 0
+    const orderNumber = `GUCH-${String(lastNum + 1).padStart(4, "0")}`
 
     const order = await prisma.order.create({
       data: {
@@ -85,7 +92,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ...order, order_number: order.orderNumber })
   } catch (error) {
     console.error("Order error:", error)
-    const msg = error instanceof Error ? error.message : String(error)
-    return NextResponse.json({ error: "Error interno", debug: msg }, { status: 500 })
+    return NextResponse.json({ error: "Error interno" }, { status: 500 })
   }
 }
